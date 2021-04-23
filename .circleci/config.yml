@@ -34,7 +34,7 @@ jobs:
       # Cache the maven dependencies
       - save_cache:
           paths:
-            - ~/.m2
+            - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
       # Standard maven build and test phases - does not perform a native build (or verify)
