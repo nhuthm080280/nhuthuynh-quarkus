@@ -10,7 +10,7 @@ jobs:
     resource_class: medium
     working_directory: ~/repo
     environment:
-      MAVEN_OPTS: -Xmx6400m
+      GRADLE_OPTS: -Xmx6400m
       # Set the GRAALVM_HOME env variable to the location where we will be installing GraalVM
       GRAALVM_HOME: /home/circleci/repo/.graalvm
     steps:
