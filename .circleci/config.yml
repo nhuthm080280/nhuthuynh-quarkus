@@ -26,11 +26,11 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      # Download maven dependencies so that we can cache them
+      # Download gradlew dependencies so that we can cache them
       # ########################
-      - run:
-          name: Download Dependencies
-          command: mvn dependency:go-offline
+      # - run:
+      #     name: Download Dependencies
+      #     command: mvn dependency:go-offline
       # Cache the maven dependencies
       - save_cache:
           paths:
