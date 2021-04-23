@@ -65,3 +65,10 @@ jobs:
           name: Verify (Native)
           command: ./gradlew check -Dquarkus.package.type=native
           no_output_timeout: 30m
+      - run:
+          name: Docker Push
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+                echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+                docker push nhuthuynh-quarkus:latest
+            fi
