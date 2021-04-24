@@ -6,6 +6,7 @@ jobs:
   build:
     # Use "machine" instead of e.g. "docker" for better/faster results
     machine: true
+      image: ubuntu-2004:202008-01
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
     working_directory: ~/repo
@@ -45,7 +46,11 @@ jobs:
       - run:
           name: Verify (Standard)
           command: ./gradlew test
-
+      ## Push docker image if master build
+      - run:
+          name: Docker Push
+          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker push nhuthuynhdocker/nhuthuynh-quarkus:latest
       # Install GraalVM and native-image, needed for a native Quarkus build
       # ########################
       - run:
@@ -59,7 +64,7 @@ jobs:
       # ########################
       - run:
           name: Build (Native)
-          command: ./gradlew build -Dquarkus.package.type=native
+          command: ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=8g -Dquarkus.container-image.tag=latest-native
           no_output_timeout: 30m
       - run:
           name: Verify (Native)
@@ -70,5 +75,5 @@ jobs:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
                 echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                docker push nhuthuynh-quarkus:latest
+                docker push nhuthuynh-quarkus:latest-native
             fi
