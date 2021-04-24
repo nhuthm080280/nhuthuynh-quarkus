@@ -18,7 +18,12 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
-
+      ## set the version
+      - run:
+          name: Set Version
+          command: |
+            echo 'export VERSION=$(gradle properties -q | grep "version:" | awk '{print $2}')' >> $BASH_ENV
+            echo $VERSION
       # Restore any files we may have cached
       # ########################
       - restore_cache:
@@ -75,4 +80,4 @@ jobs:
           no_output_timeout: 30m
       - run:
           name: Docker Push
-          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynh-quarkus-1.0.0-SNAPSHOT-runner:latest-native
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynh-quarkus-1.0.0-snapshot-runner
