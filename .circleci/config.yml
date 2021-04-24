@@ -18,6 +18,7 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
+      - setup_remote_docker
 
       # Restore any files we may have cached
       # ########################
@@ -55,6 +56,10 @@ jobs:
       - run:
           name: Install GraalVM
           command: curl https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz -O -J -0L && tar xfz graalvm-ce-java11-linux-amd64-21.1.0.tar.gz && mv graalvm-ce-java11-21.1.0 .graalvm && rm graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+      # check graalvm version
+      - run:
+          - name: Check graal vm version
+          - command: echo $GRAALVM_HOME
       - run:
           name: Install native-image
           command: $GRAALVM_HOME/bin/gu install native-image
