@@ -49,8 +49,7 @@ jobs:
       ## Push docker image if master build
       - run:
           name: Docker Push
-          command: echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push nhuthuynhdocker/nhuthuynh-quarkus:latest
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
       # Install GraalVM and native-image, needed for a native Quarkus build
       # ########################
       - run:
@@ -72,8 +71,4 @@ jobs:
           no_output_timeout: 30m
       - run:
           name: Docker Push
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-                echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-                docker push nhuthuynh-quarkus:latest-native
-            fi
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
