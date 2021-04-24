@@ -18,66 +18,76 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
+      - setup_remote_docker
+      - run:
+          name: Build srouce
+          command: ./gradlew build -Dquarkus.package.type=native
+      - run:
+          name: Build docker image
+          command: docker build -f src/main/docker/Dockerfile.native -t quarkus/nhuthuynh-quarkus .
+      - run:
+          name: Push nhuthuynh-quarkus docker image
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push quarkus/nhuthuynh-quarkus
       ## set the version
-      - run:
-          name: Set Version
-          command: |
-            echo 'export VERSION=$(((RANDOM % 10)+1))' >> $BASH_ENV
-            echo $VERSION
-      # Restore any files we may have cached
-      # ########################
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-
-      # Download gradlew dependencies so that we can cache them
-      # ########################
-      # - run:
-      #     name: Download Dependencies
-      #     command: mvn dependency:go-offline
-      # Cache the maven dependencies
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
-
-      # Standard maven build and test phases - does not perform a native build (or verify)
-      # ########################
-      - run:
-          name: Build (Standard)
-          command: ./gradlew clean build -x test
-      - run:
-          name: Verify (Standard)
-          command: ./gradlew test
-      ## Push docker image if master build
 #      - run:
-#          name: Docker Push
-#          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
-      # Install GraalVM and native-image, needed for a native Quarkus build
-      # ########################
-      - run:
-          name: Install GraalVM
-          command: curl https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz -O -J -0L && tar xfz graalvm-ce-java11-linux-amd64-21.1.0.tar.gz && mv graalvm-ce-java11-21.1.0 .graalvm && rm graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
-      # check graalvm version
-      - run:
-          name: Check graal vm version
-          command: echo $GRAALVM_HOME
-      - run:
-          name: Install native-image
-          command: $GRAALVM_HOME/bin/gu install native-image
-
-      # Perform a native Quarkus build and verify
-      # ########################
-      - run:
-          name: Build (Native)
-          command: ./gradlew clean build -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=registry.hub.docker.com -Dquarkus.jib.base-registry-username=$DOCKER_USER -Dquarkus.jib.base-registry-password=$DOCKER_PASS
-          no_output_timeout: 30m
-      - run:
-          name: Verify (Native)
-          command: ./gradlew check -Dquarkus.package.type=native
-          no_output_timeout: 30m
+#          name: Set Version
+#          command: |
+#            echo 'export VERSION=$(((RANDOM % 10)+1))' >> $BASH_ENV
+#            echo $VERSION
+#      # Restore any files we may have cached
+#      # ########################
+#      - restore_cache:
+#          keys:
+#            - v1-dependencies-{{ checksum "build.gradle" }}
+#            # fallback to using the latest cache if no exact match is found
+#            - v1-dependencies-
+#
+#      # Download gradlew dependencies so that we can cache them
+#      # ########################
+#      # - run:
+#      #     name: Download Dependencies
+#      #     command: mvn dependency:go-offline
+#      # Cache the maven dependencies
+#      - save_cache:
+#          paths:
+#            - ~/.gradle
+#          key: v1-dependencies-{{ checksum "build.gradle" }}
+#
+#      # Standard maven build and test phases - does not perform a native build (or verify)
+#      # ########################
+#      - run:
+#          name: Build (Standard)
+#          command: ./gradlew clean build -x test
+#      - run:
+#          name: Verify (Standard)
+#          command: ./gradlew test
+#      ## Push docker image if master build
+##      - run:
+##          name: Docker Push
+##          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
+#      # Install GraalVM and native-image, needed for a native Quarkus build
+#      # ########################
+#      - run:
+#          name: Install GraalVM
+#          command: curl https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-21.1.0/graalvm-ce-java11-linux-amd64-21.1.0.tar.gz -O -J -0L && tar xfz graalvm-ce-java11-linux-amd64-21.1.0.tar.gz && mv graalvm-ce-java11-21.1.0 .graalvm && rm graalvm-ce-java11-linux-amd64-21.1.0.tar.gz
+#      # check graalvm version
+#      - run:
+#          name: Check graal vm version
+#          command: echo $GRAALVM_HOME
+#      - run:
+#          name: Install native-image
+#          command: $GRAALVM_HOME/bin/gu install native-image
+#
+#      # Perform a native Quarkus build and verify
+#      # ########################
+#      - run:
+#          name: Build (Native)
+#          command: ./gradlew clean build -Dquarkus.container-image.push=true -Dquarkus.container-image.registry=registry.hub.docker.com -Dquarkus.jib.base-registry-username=$DOCKER_USER -Dquarkus.jib.base-registry-password=$DOCKER_PASS
+#          no_output_timeout: 30m
+#      - run:
+#          name: Verify (Native)
+#          command: ./gradlew check -Dquarkus.package.type=native
+#          no_output_timeout: 30m
 #      - run:
 #          name: Docker Push
 #          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push ./build/nhuthuynh-quarkus-1.0.0-snapshot-runner
