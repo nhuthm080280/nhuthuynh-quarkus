@@ -72,12 +72,12 @@ jobs:
       # ########################
       - run:
           name: Build (Native)
-          command: ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=8g
+          command: ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=8g -Dquarkus.container-image.push=true
           no_output_timeout: 30m
       - run:
           name: Verify (Native)
           command: ./gradlew check -Dquarkus.package.type=native
           no_output_timeout: 30m
-      - run:
-          name: Docker Push
-          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push ./build/nhuthuynh-quarkus-1.0.0-snapshot-runner
+#      - run:
+#          name: Docker Push
+#          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push ./build/nhuthuynh-quarkus-1.0.0-snapshot-runner
