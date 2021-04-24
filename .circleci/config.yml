@@ -24,7 +24,7 @@ jobs:
           command: ./gradlew build -Dquarkus.package.type=native
       - run:
           name: Build docker image
-          command: docker build -f src/main/docker/Dockerfile.native -t quarkus/nhuthuynh-quarkus .
+          command: docker build -f src/main/docker/Dockerfile.native -t nhuthuynhdocker/nhuthuynh-quarkus .
       - run:
           name: Push nhuthuynh-quarkus docker image
           command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus
