@@ -47,9 +47,9 @@ jobs:
           name: Verify (Standard)
           command: ./gradlew test
       ## Push docker image if master build
-      - run:
-          name: Docker Push
-          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
+#      - run:
+#          name: Docker Push
+#          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus:latest
       # Install GraalVM and native-image, needed for a native Quarkus build
       # ########################
       - run:
