@@ -6,6 +6,8 @@ jobs:
   build:
     # Use "machine" instead of e.g. "docker" for better/faster results
     machine: true
+    java:
+      version: oraclejdk11
     # Uses a "medium" sized machine - maybe increase this to "large" if you pay for CircleCI
     resource_class: medium
     working_directory: ~/repo
