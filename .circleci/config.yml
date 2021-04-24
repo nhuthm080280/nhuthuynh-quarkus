@@ -18,7 +18,7 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
-      - setup_remote_docker
+#      - setup_remote_docker
       - run:
           name: Build srouce
           command: ./gradlew build -Dquarkus.package.type=native
