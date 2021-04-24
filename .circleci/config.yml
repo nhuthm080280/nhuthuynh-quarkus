@@ -80,4 +80,4 @@ jobs:
           no_output_timeout: 30m
       - run:
           name: Docker Push
-          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push ./build/nhuthuynh-quarkus-1.0.0-SNAPSHOT-runner
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push ./build/nhuthuynh-quarkus-1.0.0-snapshot-runner
