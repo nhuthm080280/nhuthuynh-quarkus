@@ -72,7 +72,11 @@ jobs:
       # ########################
       - run:
           name: Build (Native)
-          command: ./gradlew build -Dquarkus.package.type=native -Dquarkus.native.native-image-xmx=8g -Dquarkus.container-image.push=true
+          command: ./gradlew clean build \
+            -Dquarkus.container-image.push=true \
+            -Dquarkus.container-image.registry=registry.hub.docker.com \
+            -Dquarkus.jib.base-registry-username=$DOCKER_USER \
+            -Dquarkus.jib.base-registry-password=$DOCKER_PASS \
           no_output_timeout: 30m
       - run:
           name: Verify (Native)
