@@ -21,13 +21,13 @@ jobs:
 #      - setup_remote_docker
       - run:
           name: Build srouce
-          command: ./gradlew build -Dquarkus.package.type=native
+          command: ./gradlew build
       - run:
           name: Build docker image
-          command: docker build -f src/main/docker/Dockerfile.native -t nhuthuynhdocker/nhuthuynh-quarkus .
+          command: docker build -f src/main/docker/Dockerfile.jvm -t nhuthuynhdocker/nhuthuynh-quarkus-jvm .
       - run:
           name: Push nhuthuynh-quarkus docker image
-          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus
+          command: echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin && docker image push nhuthuynhdocker/nhuthuynh-quarkus-jvm
       ## set the version
 #      - run:
 #          name: Set Version
