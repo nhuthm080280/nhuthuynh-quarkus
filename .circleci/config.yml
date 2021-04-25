@@ -1,7 +1,10 @@
 #
 # Native Quarkus CircleCI configuration file
 #
-version: 2
+orbs:
+  aws-eks: circleci/aws-eks@0.2.3
+  kubernetes: circleci/kubernetes@0.4.0
+version: 2.1
 jobs:
   build:
     # Use "machine" instead of e.g. "docker" for better/faster results
@@ -18,10 +21,19 @@ jobs:
       # Checkout the source code
       # ########################
       - checkout
-#      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
       - run:
-          name: Build srouce
-          command: ./gradlew build
+          name: Build source
+          command: ./gradlew clean build
+      - run:
+          name: Test
+          command: ./gradlew test
+      - store_test_results:
+          path: test-results
       - run:
           name: Build docker image
           command: docker build -f src/main/docker/Dockerfile.jvm -t nhuthuynhdocker/nhuthuynh-quarkus-jvm .
